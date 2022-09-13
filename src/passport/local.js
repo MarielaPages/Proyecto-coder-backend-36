@@ -1,6 +1,6 @@
 import passport from "passport";
 import { Strategy } from 'passport-local';
-import Usuarios from '../modeloMongoose/modeloMongoose.js'
+import Usuarios from '../modelosMongoose/usuariosSchema.js'
 import bcrypt from 'bcrypt'
 
 const LocalStrategy = Strategy; //guardo el metodo en esa cte
