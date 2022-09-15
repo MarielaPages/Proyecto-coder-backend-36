@@ -14,6 +14,19 @@ import cluster from 'cluster' //lib nativa de node
 import os from 'os' //lib nativa de node
 import yargs from "yargs/yargs"
 import multer from 'multer'
+import cartRoutes from "./src/routes/cartRoutes.js"
+import productsRoutes from "./src/routes/productsRoutes.js"
+import logger from "./logger.js"
+
+//fecha para los logs
+const d = new Date();
+const day = d.getDate()
+const month = d.getMonth() + 1
+const year = d.getFullYear()
+const hour = d.getHours()
+const minutes = d.getMinutes()
+const second = d.getMilliseconds()
+const date = `${day}/${month}/${year} ${hour}:${minutes}:${second}`
 
 //Configuro para poder utilizar el __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -71,6 +84,14 @@ if(MODO_CLUSTER === 'CLUSTER' && cluster.isPrimary){
     app.use(passport.initialize()) //creo que este es para que funcione passport
     app.use(passport.session())//para que session funcione con passport
     app.use('/', apiRoutes)
+    app.use('/cart', cartRoutes)
+    app.use('/products', productsRoutes)
+
+    //rutas inexistentes del servidor
+    app.get('*', (req, res) =>{
+      logger.warn(`${date} -Route: ${req.url} 404 not found -Method: GET`)
+      res.send('Sorry, this url doesn\'t exist')
+    })
 
 
 

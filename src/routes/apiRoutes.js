@@ -18,14 +18,15 @@ function isAuth(req, res, next){
     }
 }
 
+//fecha para los logs
 const d = new Date();
-    const day = d.getDate()
-    const month = d.getMonth() + 1
-    const year = d.getFullYear()
-    const hour = d.getHours()
-    const minutes = d.getMinutes()
-    const second = d.getMilliseconds()
-    const date = `${day}/${month}/${year} ${hour}:${minutes}:${second}`
+const day = d.getDate()
+const month = d.getMonth() + 1
+const year = d.getFullYear()
+const hour = d.getHours()
+const minutes = d.getMinutes()
+const second = d.getMilliseconds()
+const date = `${day}/${month}/${year} ${hour}:${minutes}:${second}`
 
 router.get('/signUp', (req, res) => {
     logger.info(`${date} -Route: /signUp -Method: GET`)
@@ -102,12 +103,6 @@ router.get('/api/randoms', (req, res)=>{
         res.send(nrosRandom)
     })
 
-})
-
-//rutas inexistentes del servidor
-router.get('*', (req, res) =>{
-    logger.warn(`${date} -Route: ${req.url} 404 not found -Method: GET`)
-    res.send('Sorry, this url doesn\'t exist')
 })
 
 export default router 
