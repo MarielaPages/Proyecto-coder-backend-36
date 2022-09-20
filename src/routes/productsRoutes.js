@@ -29,7 +29,6 @@ const date = `${day}/${month}/${year} ${hour}:${minutes}:${second}`
 router.get('/show', isAuth, async (req, res) => {
     try{
         const allProducts = await mongoProductos.getAll()
-        console.log(allProducts)
         res.render('products', {arrayProds: allProducts})
     } catch(error){
         throw error

@@ -60,7 +60,7 @@ router.get('/errorLogin', (req, res) => {
 
 router.get('/bienvenido', isAuth, (req, res) => {
     logger.info(`${date} -Route: /bienvenido -Method: GET`)
-    res.render('bienvenido', {email: req.user.email})
+    res.render('bienvenido', {name: req.user.name})
 })
 
 router.get('/logout', (req, res) => {

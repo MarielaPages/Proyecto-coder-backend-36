@@ -49,7 +49,7 @@ passport.use('login', new LocalStrategy({
     if(!comparar(password, usuarioBD.password)){
         return done(null, false)
     }
-    return done(null, usuarioBD)
+    return done(null, usuarioBD) //ese usuarioBD es lo que passport guarda en req.user al hacer el login
 }
 ))
 
