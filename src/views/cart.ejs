@@ -14,30 +14,35 @@
 </head>
 <body onload="showCart()"> <!--Se pone ahi el onload, porque necesito que carguen los scripts tambien para que pueda ejecutar y modificar al objeto (tag) del DOM seleccionado-->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-          <div>
-            <a class="navbar-brand" href="/bienvenido">Home</a>
-          </div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav navbar-center">
-              <li class="nav-item">
-                <a class="nav-link" href="/products/show">Products</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/cart/show">Cart</a>
-              </li>
-            </ul>
-          </div>
+      <div class="container-fluid">
+        <div>
+          <a class="navbar-brand" href="/bienvenido">Home</a>
         </div>
-      </nav>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav navbar-center">
+            <li class="nav-item">
+              <a class="nav-link" href="/products/show">Products</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/cart/show">Cart</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
 
-    <section id="cart"></section>
+    <div id="cartContainer">
+      <section id="cart" class="tableContainer"></section>
+      <div class="d-flex justify-content-center">
+        <button onclick="endPurchase()">Finalizar compra</button>
+      </div>
+    </div>
 
     <div class="d-flex justify-content-center">
-      <button onclick="location.href = '/logout', logoutCart()" class="prodLogOut">Log out</button>
+      <button>Log out</button>
     </div>
 
     <!-- Option 1: Bootstrap Bundle with Popper -->

@@ -77,12 +77,12 @@ function showCart(){
             )
         }).join('')
     } else{
-        cartSection.innerHTML = `<h2>Tu carrito se encuentra vacío. No has seleccionado productos.</h2>`
+        cartSection.innerHTML = `<h2 class="noProdsCart">Tu carrito se encuentra vacío. No has seleccionado productos.</h2>`
     }
 }
 
 
-//Funcion para comprar productos y ponerlos en carrito del front
+//Funcion para borrar productos del carrito
 function deleteFromCart(id){ //el id llega como str
     cart.forEach( (obj, index ) => {
         if(obj.product == id){
@@ -92,5 +92,27 @@ function deleteFromCart(id){ //el id llega como str
         }
     })
     showCart()
+}
+
+//Funcion para terminar la compra y que se envie todo a la ruta de carrito para que se guarde la compra
+async function endPurchase(){
+    try{
+        let cartPost = {cart: cart}
+        const options = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(cartPost)
+        }
+        await fetch(`http://localhost:8081/cart`, options);
+
+        //Se libera el carro luego de la compra
+        cart = []
+        localStorage.setItem("carrito actualizado", JSON.stringify(cart));
+
+        document.getElementById('cartContainer').innerHTML = "<div class='d-flex justify-content-center'><h2>Gracias por su compra!</h2></div>"
+
+    }catch(error){
+        throw error
+    }
 }
 

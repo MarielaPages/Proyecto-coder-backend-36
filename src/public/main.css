@@ -22,3 +22,7 @@ body {
 .prodLogOut{
     width: 8%;
 }
+.noProdsCart{
+    width: 80%;
+    margin: auto;
+}
