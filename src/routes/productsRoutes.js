@@ -28,20 +28,22 @@ const date = `${day}/${month}/${year} ${hour}:${minutes}:${second}`
 
 router.get('/show', isAuth, async (req, res) => {
     try{
+        logger.info(`${date} -Route: /products/show -Method: GET`)
         const allProducts = await mongoProductos.getAll()
         res.render('products', {arrayProds: allProducts})
     } catch(error){
-        throw error
+        logger.error(`${date} -Route: /products/show -Method: POST -Error: ${error}`)
     }
 })
 
 router.post('/', async (req, res) => {
     try{
+        logger.info(`${date} -Route: /products -Method: POST`)
         const products = req.body
         const allProducts = await mongoProductos.create(products)
         allProducts? res.status(201).json({statusCode: 201, message: 'Producto creado con éxito'}) : res.status(400).json({message: 'productos validation failed'});
     } catch(error){
-        throw error
+        logger.error(`${date} -Route: /products -Method: POST -Error: ${error}`)
     }
 })
 
