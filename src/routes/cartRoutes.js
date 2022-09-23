@@ -2,6 +2,7 @@ import { Router } from "express"
 import { carritosDao } from "../daos/index.js"
 import { carritosAbiertosDao } from "../daos/index.js"
 import logger from "../../logger.js"
+import nodemailer from 'nodemailer'
 
 const router = Router()
 
@@ -50,6 +51,22 @@ router.get('/', isAuth, async (req, res) => {
     }
 })
 
+//Ruta para llenar de productos el carrito
+router.put('/', isAuth, async (req, res) => {
+    try{
+        const { cart } = req.body
+
+        const updatedCart = {userEmail: req.user.email, products: cart}
+
+        await mongoCarritosAbiertos.deleteByEmail(req.user.email)
+        await mongoCarritosAbiertos.create(updatedCart)
+
+        res.status(201).json({statusCode: 201, message: 'Carrito con productos comprados creado con exito'});
+    } catch(error){
+        res.status(400).json({message: `${error}`});
+    }
+})
+
 //Ruta para enviar a compra lo que hay en el carrito
 router.post('/', isAuth, async (req, res) => {
     try{
@@ -66,26 +83,41 @@ router.post('/', isAuth, async (req, res) => {
         let cartMongo = {userID: req.user["_id"], products: products}
         await mongoCarritos.create(cartMongo)
 
+        //Mando la info al administrador con el nombre, mail del usario que compro y los productos que compro
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            port: 587,
+            auth: {
+                user: 'mai.pages5@gmail.com',
+                pass: 'dkmdymgljgoctwrf'
+            }
+        })
+    
+        await transporter.sendMail({
+            from: 'Proyecto backend <mai.pages@gmail.com>',
+            to: 'mai.pages@gmail.com',
+            subject: 'Nuevo registro',
+            html: `
+                <h2>Usuario que compra:</h2>
+                <h3>Nombre: ${req.user.name}</h3>
+                <h3>Mail: ${req.user.email}</h3>
+                <h3>Dirección: ${req.user.address}</h3>
+                <h3>Productos comprados:</h3>
+                ${cart.map((elem, index) => {
+                    return(
+                        `<h3>Producto ${index + 1}:</h3>
+                        <h4>Id producto: ${elem.product}</h3>
+                        <h4>Nombre del producto: ${elem.title}</h3>
+                        <h4>Cantidad: ${elem.amount}</h3>`
+                    )
+                }).join('')}`
+        })
+
         res.status(201).json({statusCode: 201, message: 'Carrito con productos comprados creado con exito'});
     } catch(error){
         res.status(400).json({message: `${error}`});
     }
 })
 
-//Ruta para llenar de productos el carrito
-router.put('/', isAuth, async (req, res) => {
-    try{
-        const { cart } = req.body
-
-        const updatedCart = {userEmail: req.user.email, products: cart}
-
-        await mongoCarritosAbiertos.deleteByEmail(req.user.email)
-        await mongoCarritosAbiertos.create(updatedCart)
-
-        res.status(201).json({statusCode: 201, message: 'Carrito con productos comprados creado con exito'});
-    } catch(error){
-        res.status(400).json({message: `${error}`});
-    }
-})
 
 export default router 

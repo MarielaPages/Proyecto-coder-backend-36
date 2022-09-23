@@ -3,6 +3,7 @@ import { Strategy } from 'passport-local';
 import Usuarios from '../modelosMongoose/usuariosSchema.js'
 import bcrypt from 'bcrypt'
 import { carritosAbiertosDao } from "../daos/index.js";
+import nodemailer from 'nodemailer'
 
 const LocalStrategy = Strategy; //guardo el metodo en esa cte
 
@@ -41,7 +42,28 @@ passport.use('registro', new LocalStrategy({
 
     await mongoCarritosAbiertos.create(openCartMongo)
 
-    //ARMAR MAIL AL ADMINISTRADOR 
+    //Armo mail al administrador con la info de los nuevos registros
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        port: 587,
+        auth: {
+            user: 'mai.pages5@gmail.com',
+            pass: 'dkmdymgljgoctwrf'
+        }
+    })
+
+    await transporter.sendMail({
+        from: 'Proyecto backend <mai.pages@gmail.com>',
+        to: 'mai.pages@gmail.com',
+        subject: 'Nuevo registro',
+        html: `
+            <h2>Nuevo usuario registrado:</h2>
+            <h3>Nombre: ${name}</h3>
+            <h3>Mail: ${email}</h3>
+            <h3>Dirección: ${address}</h3>
+            <h3>Edad: ${age}</h3>
+            <h3>Número de teléfono: ${phone}</h3>`
+    })
     
     return done(null, usuarioNuevo);
 }
