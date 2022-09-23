@@ -28,6 +28,14 @@ class MongoClass {
             console.log("getById error",error);
         }
     }
+    async getByEmail(email){ //solo para carritos abiertos que tienen userEmail como key
+        try {
+            const Doc = await this.collectionModel.find({userEmail:email}); //devuelve array con el objeto encontrado en formato js
+            return Doc;
+        } catch (error) {
+            console.log("getByEmail error",error);
+        }
+    }
     async deleteAll(){
         try {
             const docsBorrados = await this.collectionModel.deleteMany({})
@@ -42,6 +50,14 @@ class MongoClass {
             return docBorrado
         } catch (error) {
             console.log("deleteById error",error);
+        }
+    }
+    async deleteByEmail(email){ //solo para carritos abiertos que tienen userEmail como key
+        try {
+            const docBorrado = await this.collectionModel.deleteOne({userEmail:email})
+            return docBorrado
+        } catch (error) {
+            console.log("deleteByEmail error",error);
         }
     }
     async updateStockById(id, stock){
