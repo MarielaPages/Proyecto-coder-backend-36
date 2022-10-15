@@ -25,8 +25,13 @@ const month = d.getMonth() + 1
 const year = d.getFullYear()
 const hour = d.getHours()
 const minutes = d.getMinutes()
-const second = d.getMilliseconds()
+const second = d.getSeconds()
 const date = `${day}/${month}/${year} ${hour}:${minutes}:${second}`
+
+router.get('/', (req, res) => {
+    logger.info(`${date} -Route: / -Method: GET`)
+    res.render('signIn')
+})
 
 router.get('/signUp', (req, res) => {
     logger.info(`${date} -Route: /signUp -Method: GET`)

@@ -26,3 +26,24 @@ body {
     width: 80%;
     margin: auto;
 }
+
+/* Centro de Mensajes */
+.mensajesTitulo{
+    color: blue;
+    text-align: center;
+    margin-top: 1rem;
+}
+.mensajesTitulo input{
+    margin-top: 1rem;
+}
+.mail{
+    color: blue;
+    font-weight: bold;
+}
+.fecha{
+    color: brown;
+}
+.msj{
+    font-style: italic;
+    color: green;
+}

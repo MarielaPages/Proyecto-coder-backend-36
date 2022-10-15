@@ -8,6 +8,7 @@ if (localStorage.getItem("carrito actualizado")) {
 
 console.log(cart)
 
+//Funcion para que el carrito se acutualice a la persona que esta loggeada ahora cuando va a mirar los productos disponibles a comprar
 async function updateCart(){
     const carritoAbiertoResp = await fetch(`http://localhost:8081/cart`);
     const carritoAbierto = await carritoAbiertoResp.json()
@@ -178,3 +179,41 @@ async function endPurchase(){
     }
 }
 
+const socket = io();
+
+const button2 = document.getElementById('button2')
+const email = document.getElementById('email')
+const message = document.getElementById('message')
+
+button2.addEventListener("click", () => {
+    const d = new Date();
+    const day = d.getDate()
+    const month = d.getMonth() + 1
+    const year = d.getFullYear()
+    const hour = d.getHours()
+    const minutes = d.getMinutes()
+    const second = d.getSeconds()
+    const date = `${day}-${month}-${year} ${hour}:${minutes}:${second}`
+    const personMessage = {userEmail: email.value, date: date , message: message.value, destination: "seller@seller"}
+    socket.emit("newMessage", personMessage)
+    button2.value = ''
+    email.value=''
+    message.value=''
+})
+
+const messagesContainer = document.getElementById("messagesContainer")
+
+socket.on('mensajesEnviados', mensajes =>{
+    messagesContainer.classList.add("mensajesContainerStyles")
+    if(mensajes.length>0){
+        messagesContainer.innerHTML = mensajes.map(mensaje => {
+            return(`<p><span class="mail">${mensaje.userEmail} </span>
+                <span class="fecha">[${mensaje.date}]: </span>
+                <span class="msj">${mensaje.message}</span></p>`)
+        }).join(' ');
+    }
+    else{
+        messagesContainer.innerHTML = ''
+        messagesContainer.classList.remove("mensajesContainerStyles")
+    }
+})

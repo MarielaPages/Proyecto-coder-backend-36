@@ -17,6 +17,9 @@ import multer from 'multer'
 import cartRoutes from "./src/routes/cartRoutes.js"
 import productsRoutes from "./src/routes/productsRoutes.js"
 import logger from "./logger.js"
+import {Server as ioServer} from 'socket.io'
+import http from 'http'
+import { mensajesDao } from "./src/daos/index.js"
 
 //fecha para los logs
 const d = new Date();
@@ -25,7 +28,7 @@ const month = d.getMonth() + 1
 const year = d.getFullYear()
 const hour = d.getHours()
 const minutes = d.getMinutes()
-const second = d.getMilliseconds()
+const second = d.getSeconds()
 const date = `${day}/${month}/${year} ${hour}:${minutes}:${second}`
 
 //Configuro para poder utilizar el __dirname
@@ -34,6 +37,10 @@ const __dirname = path.dirname(__filename);
 
 //creo mi app servidor
 const app = express();
+
+//Creo mis servidors http (con las funcionalidades de app) y websocket
+const httpServer = http.createServer(app)
+export const io = new ioServer(httpServer) 
 
 //console.log(yargs(process.argv)) esto devuelve objeto que tiene a argv como una prop con su valor (un objeto con los args)
 const args = yargs(process.argv.slice(2)).argv //variable que contiene el objeto argv que estaba en el objeto antes mencionado
@@ -87,6 +94,56 @@ if(MODO_CLUSTER === 'CLUSTER' && cluster.isPrimary){
     app.use('/cart', cartRoutes)
     app.use('/products', productsRoutes)
 
+    //Creo instancia (objeto) de la clase MongoDBMensajes que es extension de la MongoClass
+    const mongoMensajes = mensajesDao();
+
+    //Creo funcion para chequear si el usuario esta autenticado
+    function isAuth(req, res, next){
+        if(req.isAuthenticated()){ //req.isAuthenticated() devuelve true o false. es true si esta la info de la persona en session porque se autentico
+            next()
+        } else {
+            res.render('signIn')
+        }
+    }
+
+    //fecha para los logs
+    const d = new Date();
+    const day = d.getDate()
+    const month = d.getMonth() + 1
+    const year = d.getFullYear()
+    const hour = d.getHours()
+    const minutes = d.getMinutes()
+    const second = d.getSeconds()
+    const date = `${day}/${month}/${year} ${hour}:${minutes}:${second}`
+
+    let userEmail = "" //Tomara el valor del usuario actual cuando se ingrese a la mensajeria
+
+    //Funcion para traerme todos los mensajes de las BD que corresponden con el usuario
+    async function devolverMensajes(){
+            
+      let messages = await mongoMensajes.getByEmail2(userEmail)
+      io.sockets.emit('mensajesEnviados', messages)
+    }
+
+    //Levanto el servidor io y lo pongo a escuchar y emitir eventos
+    io.on('connection', async socket => {
+
+      await devolverMensajes()
+
+      socket.on('newMessage', async data =>{
+        await mongoMensajes.create(data)
+        let messages = await mongoMensajes.getByEmail2(userEmail)
+        io.sockets.emit('mensajesEnviados', messages)
+      })
+    }); 
+
+    //ruta para chat
+    app.get('/mensajes', isAuth, async (req, res) => {
+      userEmail = req.user.email //Para que la los metodos usados en con el servidor websocket puedan tomar el mail del usuario actual
+      logger.info(`${date} -Route: /mensajes -Method: GET`)
+      res.render('mensajes')
+    })
+
     //rutas inexistentes del servidor
     app.get('*', (req, res) =>{
       logger.warn(`${date} -Route: ${req.url} 404 not found -Method: GET`)
@@ -94,13 +151,13 @@ if(MODO_CLUSTER === 'CLUSTER' && cluster.isPrimary){
     })
 
 
-
-    //inicio server
+    //Levanto el servidor http (que tiene las funcionalidades de app que es un servidor web de express)
     const PORT = parseInt(args.PORT) || 8080
-    const server = app.listen(PORT, () => {
+    const server = httpServer.listen(PORT, () => {
         console.log(`Your app is listening on port ${PORT}`)
     })
 
     server.on('error', error => console.log(`Error en el servidor ${error}`))
-    }
+}
 
+//FALTAN LOS CONTROLLERS y SERVCIOS

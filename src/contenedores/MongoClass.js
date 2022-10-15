@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-class MongoClass {
+class MongoClass { 
     constructor(collectionName, docSchema){
         this.collectionModel = mongoose.model(collectionName, docSchema)
     }
@@ -31,6 +31,14 @@ class MongoClass {
     async getByEmail(email){ //solo para carritos abiertos que tienen userEmail como key
         try {
             const Doc = await this.collectionModel.find({userEmail:email}); //devuelve array con el objeto encontrado en formato js
+            return Doc;
+        } catch (error) {
+            console.log("getByEmail error",error);
+        }
+    }
+    async getByEmail2(cusrtomerEmail){ //Solo para mensajeria
+        try {
+            const Doc = await this.collectionModel.find({$or: [{userEmail : cusrtomerEmail}, {destination : cusrtomerEmail}]}); //devuelve array con el objeto encontrado en formato js
             return Doc;
         } catch (error) {
             console.log("getByEmail error",error);

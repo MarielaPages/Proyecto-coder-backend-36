@@ -28,7 +28,7 @@ const month = d.getMonth() + 1
 const year = d.getFullYear()
 const hour = d.getHours()
 const minutes = d.getMinutes()
-const second = d.getMilliseconds()
+const second = d.getSeconds()
 const date = `${day}/${month}/${year} ${hour}:${minutes}:${second}`
 
 //Ruta para ver lo que contiene el carrito
@@ -46,7 +46,7 @@ router.get('/', isAuth, async (req, res) => {
     try{
         logger.info(`${date} -Route: /cart -Method: GET`)
         let carritoAbierto = await mongoCarritosAbiertos.getByEmail(req.user.email)
-
+        
         res.json(carritoAbierto[0])
     } catch(error){
         logger.error(`${date} -Route: /cart -Method: GET -Error: ${error}`)
@@ -65,7 +65,7 @@ router.put('/', isAuth, async (req, res) => {
         await mongoCarritosAbiertos.deleteByEmail(req.user.email)
         await mongoCarritosAbiertos.create(updatedCart)
 
-        res.status(201).json({statusCode: 201, message: 'Carrito con productos comprados creado con exito'});
+        res.status(201).json({statusCode: 201, message: 'producto agregado con exito al carrito'});
     } catch(error){
         logger.error(`${date} -Route: /cart -Method: PUT -Error: ${error}`)
     }
