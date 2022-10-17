@@ -19,8 +19,8 @@ function loggerDev(){
     const loggerDev = winston.createLogger({
         transports: [
             new winston.transports.Console({level: 'info'}),
-            new winston.transports.File({filename: 'devWarn', level: 'warn'}),
-            new winston.transports.File({filename: 'devError', level: 'error'})
+            new winston.transports.File({filename: 'devWarn.log', level: 'warn'}),
+            new winston.transports.File({filename: 'devError.log', level: 'error'})
         ]
     })
 
