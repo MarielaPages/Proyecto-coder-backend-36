@@ -159,5 +159,3 @@ if(MODO_CLUSTER === 'CLUSTER' && cluster.isPrimary){
 
     server.on('error', error => console.log(`Error en el servidor ${error}`))
 }
-
-//FALTAN LOS CONTROLLERS y SERVCIOS

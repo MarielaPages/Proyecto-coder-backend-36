@@ -6,7 +6,7 @@ class MongoClass {
     }
     async create(obj){
         try {
-            const newDoc = await this.collectionModel.create(obj);
+            const newDoc = await this.collectionModel.create(obj); //si solo pase un obj para crear, devuelve el doc que se creo (como objeto, no array con objeto), si se pasaron mas de un obj, devuelve array con los docs creados
             return newDoc;
         } catch (error) {
             console.log("create error",error);
@@ -14,7 +14,7 @@ class MongoClass {
     }
     async getAll(){
         try {
-            const allDocs = await this.collectionModel.find({}); // devuelve array de objetos JS
+            const allDocs = await this.collectionModel.find({}); // devuelve array de objetos JS (si es uno solo, igual es un array con un objeto. Si no hay docs, devuelve array vacio)
             return allDocs;
         } catch (error) {
             console.log("getAll error",error);

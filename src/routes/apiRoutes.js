@@ -4,19 +4,11 @@ import { fork } from 'child_process'
 import os from "os" //libreria nativa de node
 import compression from "compression"
 import logger from "../../logger.js"
+import { getSignIn, getSignUp, getErrorRegistro, getLogIn, getErrorLogIn, getBienvenido, getLogOut, getInfo } from "../controllers/apiControllers.js"
 
 const router = Router()
 
 const numCPUs = os.cpus().length //obtengo el numero de cpus en mi compu
-
-//Creo funcion para chequear si el usuario esta autenticado
-function isAuth(req, res, next){
-    if(req.isAuthenticated()){ //req.isAuthenticated() devuelve true o false. es true si esta la info de la persona en session porque se autentico
-        next()
-    } else {
-        res.render('signIn')
-    }
-}
 
 //fecha para los logs
 const d = new Date();
@@ -28,70 +20,40 @@ const minutes = d.getMinutes()
 const second = d.getSeconds()
 const date = `${day}/${month}/${year} ${hour}:${minutes}:${second}`
 
-router.get('/', (req, res) => {
-    logger.info(`${date} -Route: / -Method: GET`)
-    res.render('signIn')
-})
+//Creo funcion para chequear si el usuario esta autenticado
+function isAuth(req, res, next){
+    if(req.isAuthenticated()){ //req.isAuthenticated() devuelve true o false. es true si esta la info de la persona en session porque se autentico
+        next()
+    } else {
+        res.render('signIn')
+    }
+}
 
-router.get('/signUp', (req, res) => {
-    logger.info(`${date} -Route: /signUp -Method: GET`)
-    res.render('signUp')
-})
+router.get('/', getSignIn)
+
+router.get('/signUp', getSignUp)
 
 router.post('/signUp', passport.authenticate('registro', { //al hacer esto (el passport.authenticate) ya guarda en session los datos (si se dio success)
     failureRedirect: '/errorRegistro',
     successRedirect: '/login'
 })) //No se como poner el logger.info en estos
 
-router.get('/errorRegistro', (req, res) => {
-    logger.info(`${date} -Route: /errorRegistro -Method: GET`)
-    res.render('errorRegistro')
-})
+router.get('/errorRegistro', getErrorRegistro)
 
-router.get('/login', (req, res) => {
-    logger.info(`${date} -Route: /login -Method: GET`)
-    res.render('signIn')
-})
+router.get('/login', getLogIn)
 
 router.post('/login', passport.authenticate('login', { //al hacer esto se guardan los datos en session (si salio success)
     failureRedirect: '/errorLogin',
     successRedirect: '/bienvenido'
 }))
 
-router.get('/errorLogin', (req, res) => {
-    logger.info(`${date} -Route: /errorLogin -Method: GET`)
-    res.render('errorLogin')
-})
+router.get('/errorLogin', getErrorLogIn)
 
-router.get('/bienvenido', isAuth, (req, res) => {
-    logger.info(`${date} -Route: /bienvenido -Method: GET`)
-    res.render('bienvenido', {name: req.user.name})
-})
+router.get('/bienvenido', isAuth, getBienvenido)
 
-router.get('/logout', (req, res) => {
-    req.session.destroy(err => {
-        if(err){
-            return res.json({status: 'logout ERROR'})
-        }
-        })
-    logger.info(`${date} -Route: /logout -Method: GET`)
-    res.render('adios')
-})
+router.get('/logout', getLogOut)
 
-router.get('/info', compression(), (req, res) => {
-    logger.info(`${date} -Route: /info -Method: GET`)
-    res.render('info', {
-        argumentosEntrada: process.argv[3],
-        nombrePlataformaSO: process.platform,
-        versionNode: process.version,
-        memoriaRservada: process.memoryUsage.rss(),
-        execPath: process.execPath,
-        processId: process.pid,
-        projectFile: process.cwd(),
-        numeroProcesadores: numCPUs
-    })
-})
-
+router.get('/info', compression(), getInfo)
 
 router.get('/api/randoms', (req, res)=>{
     logger.info(`${date} -Route: /api/randoms -Method: GET`)
@@ -108,6 +70,6 @@ router.get('/api/randoms', (req, res)=>{
         res.send(nrosRandom)
     })
 
-})
+}) //No supe como hacer el controller de este
 
 export default router 
