@@ -6,16 +6,12 @@ if (localStorage.getItem("carrito actualizado")) {
     cart = JSON.parse(localStorage.getItem("carrito actualizado"));
 }
 
-console.log(cart)
-
 //Funcion para que el carrito se acutualice a la persona que esta loggeada ahora cuando va a mirar los productos disponibles a comprar
 async function updateCart(){
     const carritoAbiertoResp = await fetch(`http://localhost:8081/cart`);
     const carritoAbierto = await carritoAbiertoResp.json()
 
     cart = carritoAbierto.products
-
-    console.log(cart)
 
     localStorage.setItem("carrito actualizado", JSON.stringify(cart));
 }
@@ -27,8 +23,7 @@ async function buy(id, stock, price, title, thumbnail){ //el id y stock llegan c
     let cantProd = parseInt(document.getElementById(`${id}`).value)
     let stockParse = parseInt(stock)
     let priceParse = parseInt(price)
-    console.log(cantProd)
-
+    
     //Si ya habia puesto una cantidad de un producto, borra el objeto que refiere a ese producto con su cantidad
     cart.forEach( (obj, index ) => {
         if(obj.product == id){
@@ -40,8 +35,6 @@ async function buy(id, stock, price, title, thumbnail){ //el id y stock llegan c
 
     //Crea el objeto con el id del producto y la cantidad que puso. No deja poner mas que el stock 
     if(cantProd <= stockParse && cantProd > 0){
-
-        console.log("entro")
         
         const prodObj = {product: id, amount: cantProd, price: priceParse, title: title, thumbnail: thumbnail}
 
@@ -84,7 +77,7 @@ async function showCart(){
         const carritoAbierto = await carritoAbiertoResp.json()
 
         cart = carritoAbierto.products
-        console.log(cart)
+
         localStorage.setItem("carrito actualizado", JSON.stringify(cart));
 
         let cartSection = document.getElementById('cart')
