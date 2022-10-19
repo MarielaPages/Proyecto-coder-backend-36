@@ -81,17 +81,17 @@ passport.use('login', new LocalStrategy({
     if(!comparar(password, usuarioBD.password)){
         return done(null, false)
     }
-    return done(null, usuarioBD) //ese usuarioBD es lo que passport guarda en req.user al hacer el login
+    return done(null, usuarioBD) //ese usuarioBD es lo que passport guarda en req.user al hacer el login (gracias a serializeUser y deserializeUser)
 }
 ))
 
 //creo la serializ y deserializ --> por esto en session se guarda en passport solo user y el id, no se pasa toda la info del usuario que se logueo
-passport.serializeUser((usuario, done) => {
-    done(null, usuario.id)
+passport.serializeUser((usuario, done) => { //cuando se ejecute el metodo serializeUser, usuario tomara el valor de aquello que retorno el registro o login, es decir, usuarioNuevo o usuarioBD respectivamente
+    done(null, usuario._id) //ese id es el que se guarda en el user del objeto passport de la session 
 })
-passport.deserializeUser(async(id, done) => {
-    const usuario = await Usuarios.findById(id);
+passport.deserializeUser(async(id, done) => { //cuando se ejecute el metodo, id toma el valor que se guardo en user del objeto passport de la session 
+    const usuario = await Usuarios.findById(id); 
     done(null, usuario)
-})
+}) //al deserializarse el user, el usuario que encuentra con el id que guarde en user este queda dentro de req.user
 
 
