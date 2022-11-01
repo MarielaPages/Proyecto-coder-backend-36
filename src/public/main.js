@@ -8,7 +8,7 @@ if (localStorage.getItem("carrito actualizado")) {
 
 //Funcion para que el carrito se acutualice a la persona que esta loggeada ahora cuando va a mirar los productos disponibles a comprar
 async function updateCart(){
-    const carritoAbiertoResp = await fetch(`http://localhost:8081/cart`);
+    const carritoAbiertoResp = await fetch(`http://proyecto-coder-backend.onrender.com/cart`);
     const carritoAbierto = await carritoAbiertoResp.json()
 
     cart = carritoAbierto.products
@@ -49,7 +49,7 @@ async function buy(id, stock, price, title, thumbnail){ //el id y stock llegan c
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(cartPut)
         }
-        await fetch(`http://localhost:8081/cart`, options);
+        await fetch(`http://proyecto-coder-backend.onrender.com/cart`, options);
 
     } else if(cantProd >= stockParse){
         cantProd = stockParse
@@ -66,14 +66,14 @@ async function buy(id, stock, price, title, thumbnail){ //el id y stock llegan c
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(cartPut)
         }
-        await fetch(`http://localhost:8081/cart`, options);
+        await fetch(`http://proyecto-coder-backend.onrender.com/cart`, options);
     }
 }
 
 //Funcion que permite ver carrito
 async function showCart(){
     try{
-        const carritoAbiertoResp = await fetch(`http://localhost:8081/cart`);
+        const carritoAbiertoResp = await fetch(`http://proyecto-coder-backend.onrender.com/cart`);
         const carritoAbierto = await carritoAbiertoResp.json()
 
         cart = carritoAbierto.products
@@ -136,7 +136,7 @@ async function deleteFromCart(id){ //el id llega como str
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(cartPut)
     }
-    await fetch(`http://localhost:8081/cart`, options);
+    await fetch(`http://lproyecto-coder-backend.onrender.com/cart`, options);
 
     showCart()
 }
@@ -150,7 +150,7 @@ async function endPurchase(){
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(cartPost)
         }
-        await fetch(`http://localhost:8081/cart`, options);
+        await fetch(`http://proyecto-coder-backend.onrender.com/cart`, options);
 
         //Se libera el carro luego de la compra
         cart = []
@@ -163,7 +163,7 @@ async function endPurchase(){
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(cartPut)
         }
-        await fetch(`http://localhost:8081/cart`, options2);
+        await fetch(`http://proyecto-coder-backend.onrender.com/cart`, options2);
 
         document.getElementById('cartContainer').innerHTML = "<div class='d-flex justify-content-center'><h2>Gracias por su compra!</h2></div>"
 
