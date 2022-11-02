@@ -8,14 +8,14 @@
 </head>
 <body>
     <h3>Sign up:</h3>
-    <form action="/signUp" method="post" enctype="multipart/form-data">
-        <input type="text" name="name" placeholder="Ingrese su nombre">
-        <input type="text" name="address" placeholder="Ingrese su dirección">
+    <form action="/signUp" method="post" enctype="multipart/form-data" required>
+        <input type="text" name="name" placeholder="Ingrese su nombre" required>
+        <input type="text" name="address" placeholder="Ingrese su dirección" required>
         <input type="number" name="age" placeholder="Ingrese su edad">
-        <input type="tel" name="phone" placeholder="Ingrese su numero de telfono">
-        <input type="email" name="email" placeholder="Ingrese un mail">
-        <input type="password" name="password" placeholder="Ingrese una contraseña">
-        <input type="file" name="thumbnail" placeholder="Ingrese una foto de usted">
+        <input type="tel" name="phone" placeholder="Ingrese su numero de telfono" required>
+        <input type="email" name="email" placeholder="Ingrese un mail" required>
+        <input type="password" name="password" placeholder="Ingrese una contraseña" required>
+        <input type="file" name="thumbnail" placeholder="Ingrese una foto de usted" required>
         <button>Sign up</button>
     </form>
     <button onclick="location.href='/login'">Ir al Sign in</button>
