@@ -136,7 +136,7 @@ async function deleteFromCart(id){ //el id llega como str
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(cartPut)
     }
-    await fetch(`https://lproyecto-coder-backend.onrender.com/cart`, options);
+    await fetch(`https://proyecto-coder-backend.onrender.com/cart`, options);
 
     showCart()
 }
