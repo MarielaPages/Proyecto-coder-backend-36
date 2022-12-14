@@ -179,17 +179,9 @@ const email = document.getElementById('email')
 const message = document.getElementById('message')
 
 button2.addEventListener("click", () => {
-    const d = new Date();
-    const day = d.getDate()
-    const month = d.getMonth() + 1
-    const year = d.getFullYear()
-    const hour = d.getHours()
-    const minutes = d.getMinutes()
-    const second = d.getSeconds()
-    const date = `${day}-${month}-${year} ${hour}:${minutes}:${second}`
+    const date = new Date(); //armo fecha asi, porque el schema de los mensajes para mongo necesita formato date
     const personMessage = {userEmail: email.value, date: date , message: message.value, destination: "seller@seller"}
     socket.emit("newMessage", personMessage)
-    button2.value = ''
     email.value=''
     message.value=''
 })
