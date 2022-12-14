@@ -179,7 +179,14 @@ const email = document.getElementById('email')
 const message = document.getElementById('message')
 
 button2.addEventListener("click", () => {
-    const date = new Date(); //armo fecha asi, porque el schema de los mensajes para mongo necesita formato date
+
+    //Funcion que permite convertir la fecha actual en UTC que viene por default al hacer new Date() en fecha local en formato date (object) tmb
+    function convertUTCDateToLocalDate(date) {
+        var newDate = new Date(date.getTime() - date.getTimezoneOffset()*60*1000);
+        return newDate;   
+    }
+
+    const date = convertUTCDateToLocalDate(new Date()) //armo fecha asi, porque el schema de los mensajes para mongo necesita formato date
     const personMessage = {userEmail: email.value, date: date , message: message.value, destination: "seller@seller"}
     socket.emit("newMessage", personMessage)
     email.value=''
